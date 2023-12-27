@@ -2,7 +2,7 @@
 
 Simulation Example: 
 
-```{r}
+```r
 library(dplyr)
 library(parallel)
 library(Rcpp)
