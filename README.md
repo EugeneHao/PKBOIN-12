@@ -3,6 +3,7 @@
 Simulation Example: 
 
 ```r
+# library all required packages: 
 library(dplyr)
 library(parallel)
 library(Rcpp)
@@ -10,6 +11,16 @@ library(RcppArmadillo)
 library(inline)
 require(truncnorm)
 library(knitr)
+
+# source functiosn: 
+source("fun_findOBD.R")
+source("fun_pava.R")
+source("fun_TITE_BOIN12dec.R")
+source("fun_TITE_PK_core_para.R")
+source("fun_TITE_PK_fixsimu.R")
+source("fun_TITE_PK_update.R")
+source("fun_TITE_PKBOIN12_OBD.R")
+source("fun_TITE_PKBOIN12.R")
 
 dN = 6;
 pT = 0.35; qE = 0.25; pqcorr = 0;
