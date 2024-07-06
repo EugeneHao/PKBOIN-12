@@ -1,3 +1,4 @@
+# function for main simulation
 fun_TITE_PK_fixsimu <-
   function(dN, rV, pV, qV, pT, qE, pqcorr = 0, psi0PK, CV, g_P, csize, cN, design, utility = FALSE,
            alphaT = 1, betaT = 1, alphaE = 1, betaE = 1,
@@ -5,8 +6,8 @@ fun_TITE_PK_fixsimu <-
            doselimit = Inf,
            u11 = 100, u00 = 0, cutoff_tox = 0.95, cutoff_eff = 0.9,
            repsize = 10000, n_cores = 10,                                 # replication parameters
-           accrual = 10, susp = 0.5, tox_win = 30, eff_win = 60, tox_dist = "UnifCateg",   #TITE parameters
-           eff_dist = "UnifCateg", tox_dist_hyper = NULL, eff_dist_hyper = NULL, use_susp = TRUE, accrual_random = FALSE,
+           accrual = 10, susp = 0.5, tox_win = 30, eff_win = 60, tox_dist = "Uniform",   #TITE parameters
+           eff_dist = "Uniform", tox_dist_hyper = NULL, eff_dist_hyper = NULL, use_susp = TRUE, accrual_random = FALSE,
            considerPK = TRUE)
 {
 

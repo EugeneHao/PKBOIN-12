@@ -1,3 +1,4 @@
+# function for determining the dosing determination time for the next cohort and the statistics for the decision
 fun_TITE_PK_update <- function(cid, CV, g_P, patDT, doseDT, current, time_current, tox_win, eff_win, csize,
                             tox_dist, eff_dist, accrual, susp = 0.5,
                             u11 = 60, u10 = 0, u01 = 100, u00 = 40,
@@ -88,27 +89,19 @@ fun_TITE_PK_update <- function(cid, CV, g_P, patDT, doseDT, current, time_curren
     # the earliest time fitting the accrual suspension rule and also the first patient in the next cohort is ready for enrollment
   } else
   {
+    tox_next <- max(tmp$tox_confirm)
+    eff_next <- max(tmp$eff_confirm)
     if(accrual_random == TRUE)
     {
-      time_next <- max(patDT$enroll, na.rm = T) + runif(1, 0, 2 * accrual) + 1
+      time_next <- max(tox_next, eff_next, max(patDT$enroll, na.rm = T)) + runif(1, 0, 2 * accrual) + 1
     } else
     {
-      time_next <- time_current + csize * accrual + 1
+      time_next <- max(tox_next, eff_next, time_current + csize * accrual + 1)
     }
   }
 
 ### Step 3: update doseDT ####
-#  (Note: when do we make the dose decision for the next cohort? )
-#  (We wait until the accrual suspension rule is satisfied and the next patient is available)
 
-  # patDT_current initialization (generate at the beginning of each cohort assignment)
-    # delta_t: toxicity has been ascertained or pending (0: no DLT; 1: DLT; -1: ascertained);
-    # delta_e: efficacy has been ascertained or pending (0: no response; 1: response; -1: ascertained)
-    # t_i: from dosing time to time_next
-    # w_t: weight adjusting for the DLT has not yet been ascertained
-    # w_e: weight adjusting for the response has not yet been ascertained
-    # tox_exp: expectation of DLT at the current time (1 = observed, 0 = no DLT, (0, 1): expectation)
-    # eff_exp: expectation of response at the current time
   patDT_current <- patDT %>% filter(!is.na(d)) %>%
     mutate(delta_t = -1, delta_e = -1, t_i = time_next - enroll)
 
@@ -123,18 +116,13 @@ fun_TITE_PK_update <- function(cid, CV, g_P, patDT, doseDT, current, time_curren
 
   ####  weight adjusting accounts for the partial information (3.2) very important #######
   # 3.2  w_t, w_e (for each patient)
-  # remember this part can be changed if we do not assume uniform distribution for the event on [0, A_q]
   patDT_current <- patDT_current %>%
     mutate(w_t = ifelse(t_i < tox_win & delta_t < 0, t_i/tox_win, 0),     # t_i/A_t
            w_e = ifelse(t_i < eff_win & delta_e < 0, t_i/eff_win, 0))     # t_i/A_e
 
 
 
-  # 3.3 ESS_t, ESS_e, pi_t_hat, pi_e_hat (for each dose level, should be updated on doseDT)
-    # ESS_t: effective sample size for toxicity
-    # ESS_e: effective sample size for efficacy
-    # pi_t_hat, pi_e_hat: estimate of pi_t and pi_e (dose level)
-    # x_d: quasi-event
+  # 3.3 ESS_t, ESS_e, pi_t_hat, pi_e_hat 
   for(i in 1:dN)
   {
     if(sum(patDT_current$d == i) > 0)   # at least one cohort has been assigned to dose i
@@ -168,7 +156,7 @@ fun_TITE_PK_update <- function(cid, CV, g_P, patDT, doseDT, current, time_curren
   patDT_current$eff_exp[patDT_current$delta_e == -1] <-
     (doseDT$pi_e_hat[patDT_current$d] * (1 - patDT_current$w_e) / (1 - doseDT$pi_e_hat[patDT_current$d] * patDT_current$w_e))[patDT_current$delta_e == -1]
 
-  #### quasi-event x_d for TITE-BOIN12 (3.5) need to be updated for other designs ####
+  #### quasi-event x_d for TITE-BOIN12 ####
   # 3.5 x_d (for each dose level)
   for(i in 1:dN) {
     if(sum(patDT_current$d == i) > 0)   # at least one cohort has been assigned to dose i

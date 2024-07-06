@@ -1,3 +1,4 @@
+# decision table for the dosing decision
 fun_TITE_PKBOIN12dec <- function(pT, qE, lambda_e, lambda_d, csize, cN, cutoff_tox=0.95, cutoff_eff = 0.90)
 {
 

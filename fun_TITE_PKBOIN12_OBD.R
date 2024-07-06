@@ -1,3 +1,4 @@
+# function for selecting the OBD
 fun_TITE_PKBOIN12_OBD <- function(doseDT, pT, u11, u00, zeta1)
 {
   used <- which(doseDT$n > 0)
@@ -8,7 +9,7 @@ fun_TITE_PKBOIN12_OBD <- function(doseDT, pT, u11, u00, zeta1)
   MTD <- which.min(abs(ptilde - pT))
 
   ubar <- (u11 * doseDT$y + u00 * (doseDT$n - doseDT$x))/100
-  ubar <- (ubar + 1)/(doseDT$n + 2)    # update!
+  ubar <- (ubar + 1)/(doseDT$n + 2)   
 
   ubar[doseDT$keep == 0] <- -100
   ubar[doseDT$n == 0] <- -100

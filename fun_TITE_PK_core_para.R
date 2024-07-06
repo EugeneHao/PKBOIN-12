@@ -1,3 +1,4 @@
+# core function for PKBOIN-12 and TITE-PKBOIN-12
 fun_TITE_PK_core_para <-
   function(index, rM, pM, qM, OBDlist, decisionM, pT, qE, pqcorr, csize, cN, design, mindelta,
            size, lambda_d, lambda_e, zeta1, CV, g_P,
@@ -10,7 +11,7 @@ fun_TITE_PK_core_para <-
   rlist <- rM[index,]
   plist <- pM[index,]
   qlist <- qM[index,]
-  trueOBD <- OBDlist[[index]]   # the ith element, can be a list
+  trueOBD <- OBDlist[[index]]  
 
   Result <- fun_TITE_PKBOIN12(index, rlist, plist, qlist, trueOBD, pT, qE, pqcorr, lambda_e, lambda_d, zeta1, CV, g_P,
                               csize, cN, decisionM, ub, u11, u00, current, doselimit,

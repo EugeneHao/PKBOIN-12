@@ -1,30 +1,10 @@
-findOBD <- function(tox, eff, pT, qE)
-{
-  MTD <- sum(tox <= pT)
-  if(MTD == 0)
-  {
-    return(0)
-  } else if(max(eff[1:MTD]) < qE)
-  {
-    return(-1)
-  } else
-  {
-    OBD <- which.max(eff[1:MTD])
-    return(OBD)
-  }
-}
-
-
-
-
-
-# when u11 = 100, u00 = 0 should provide the same result
+# function for identifying the true OBD with RDS
 findOBD_RDS <- function(tox, eff, pT, qE, u11, u00)
 {
   MTD <- sum(tox <= pT)
   if(MTD == 0)
   {
-    return(0)
+    return(-1)
   } else if(max(eff[1:MTD]) < qE)
   {
     return(-1)
